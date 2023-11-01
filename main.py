@@ -1,12 +1,29 @@
 import random
+import winsound
 
+"""
+Function Summary:
+- `play_spin_sound()`: Plays a spinning sound.
+- `play_win_sound()`: Plays a winning sound.
+- `check_winnings()`: Checks for winning combinations and calculates winnings.
+- `get_slot_machine_spin()`: Generates random slot machine symbols.
+- `print_slot_machine()`: Displays the slot machine symbols on the screen.
+- `deposit()`: Takes an initial deposit amount from the user.
+- `get_number_of_lines()`: Asks the user to select the number of lines to bet on.
+- `get_bet()`: Asks the user for the bet amount per line.
+- `spin()`: Simulates a spin, calculates the result, and updates the balance.
+- `main()`: The main game loop that manages user interactions and game flow.
+"""
+# Global constants for the game
 MAX_LINES = 3
-MAX_BET = 100
+MAX_BET = 1000
 MIN_BET = 1
 
 ROWS = 3
 COLS = 3
 
+
+#Define the symbols and their respective values
 symbol_count = {
     "A": 2,
     "B": 4,
@@ -21,7 +38,14 @@ symbol_value = {
     "D": 2
 }
 
+#Functions for playing sound
+def play_spin_sound():
+    winsound.Beep(1000,300)
 
+def play_win_sound():
+    winsound.Beep(1500,300)
+    
+#Funciton to check for winning combinations and calulate winnings
 def check_winnings(columns, lines, bet, values):
     winnings = 0
     winning_lines = []
@@ -37,7 +61,7 @@ def check_winnings(columns, lines, bet, values):
 
     return winnings, winning_lines
 
-
+#Function to generate random slot spin
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
     for symbol, symbol_count in symbols.items():
@@ -57,7 +81,7 @@ def get_slot_machine_spin(rows, cols, symbols):
 
     return columns
 
-
+#Function to display slot symbols
 def print_slot_machine(columns):
     for row in range(len(columns[0])):
         for i, column in enumerate(columns):
@@ -68,7 +92,7 @@ def print_slot_machine(columns):
 
         print()
 
-
+#Function to deposit inital balance
 def deposit():
     while True:
         amount = input("What would you like to deposit? $")
@@ -83,7 +107,7 @@ def deposit():
 
     return amount
 
-
+#Function to get lines to bet on
 def get_number_of_lines():
     while True:
         lines = input(
@@ -99,7 +123,7 @@ def get_number_of_lines():
 
     return lines
 
-
+#Function to determine bet per line
 def get_bet():
     while True:
         amount = input("What would you like to bet on each line? $")
@@ -114,7 +138,7 @@ def get_bet():
 
     return amount
 
-
+#Function to simulate slot spin
 def spin(balance):
     lines = get_number_of_lines()
     while True:
@@ -127,17 +151,20 @@ def spin(balance):
         else:
             break
 
+    play_spin_sound()
+    
     print(
         f"You are betting ${bet} on {lines} lines. Total bet is equal to: ${total_bet}")
 
     slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
     print_slot_machine(slots)
     winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
+    
     print(f"You won ${winnings}.")
     print(f"You won on lines:", *winning_lines)
     return winnings - total_bet
 
-
+#Main game loop function
 def main():
     balance = deposit()
     while True:
